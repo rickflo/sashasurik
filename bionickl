@@ -56,16 +56,17 @@
 
 ###### Таблица Staff из следущих атрибутов:
 * id - создается по умолчанию, INT
-* weight - вес животного, DECIMAL(6,2)
-* height - рост животного, DECIMAL(6,2)
-* vaccations - имеются ли прививки у животного, VARCHAR(30)
+* name_staff - номер сотрудника, VARCHAR(30)
+* age_staff - сколько лет сотруднику, VARCHAR(30)
+* number_staff - номер телефона сотрудника, VARCHAR(30)
 
 ![](screens/medical1.png)
 ![](screens/medical2.png)
 
-###### Таблица Room состоит из следущих атрибутов:
+###### Таблица supplies состоит из следущих атрибутов:
 * id - создается по умолчанию, INT
-* id_employees - айди к таблице Employees
+* italy - поставка с италии VARCHAR(30)
+* russia - поставка с россии VARCHAR(30)
 
 ![](screens/room1.png)
 ![](screens/room2.png)	
