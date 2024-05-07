@@ -75,16 +75,16 @@
 # 3. Демонстрация работы функции UNION
 
 Объединения двух наборов строк
-Я объединил name_animal из таблицы Animals с type_of_animal с той же таблицы
+Я объединил name_staff из таблицы Staff с staff_name_staff с таблицой main
 
-```
-SELECT name_animal AS Название_и_тип_животного
-FROM Animals
+```sql
+SELECT name_staff AS Имя_работнка
+FROM Staff
 
 UNION
 
-SELECT type_of_animal AS Название_и_тип_животного
-FROM Animals
+SELECT staff_name_staff AS Имя_работника
+FROM main
 ```
 
 ### Результат:
@@ -96,88 +96,32 @@ FROM Animals
 # 4. Демонстрация работы функции ORDER BY
 
 Сортировка полученных строк
-Я отсортировал вес животных
+Я отсортировал возраст работников
 
 ### По возрастанию:
 
-```
-SELECT
-	name_animal,
-	weight
-FROM Animals
-JOIN Medical_examination
-	ON Animals.id_examination = Medical_examination.id
-ORDER BY weight
+```sql
+SELECT Staff.name_staff, Staff.age_staff
+from Staff
+order by age_staff
+
 ```
 ![](screens/orderby1.png)
 
-Вывелась таблица, отсортированная по возрастанию веса
-
-
-### По убыванию:
-
-```
-SELECT
-	name_animal,
-	weight
-FROM Animals
-JOIN Medical_examination
-	ON Animals.id_examination = Medical_examination.id
-ORDER BY weight DESC
-```
-
-![](screens/orderby2.png)
-
-Вывелась таблица, отсортированная по убыванию веса
-
-
-### По алфавиту:
-
-```
-SELECT
-	name_animal,
-	weight
-FROM Animals
-JOIN Medical_examination
-	ON Animals.id_examination = Medical_examination.id
-ORDER BY name_animal
-```
-
-![](screens/orderby3.png)
-
-Вывелась таблица, отсортированная по возрастанию алфавита
-
-### В обратном алфавитном порядке:
-
-```
-SELECT
-	name_animal,
-	weight
-FROM Animals
-JOIN Medical_examination
-	ON Animals.id_examination = Medical_examination.id
-ORDER BY name_animal DESC
-```
-
-![](screens/orderby4.png)
-
-Вывелась таблица, отсортированная в обратном порядке алфавита
-
+Этот запрос выводит сортировку по возрасту работников
 
 # 5. Демонстрация работы функции HAVING
 
 Получение данных из таблицы базы, соответствующих определённым значениям результатов
 Я вывел имя животных у которых вес больше 200 кг
 
-```
-SELECT
-	name_animal,
-	weight
-FROM Animals
-JOIN Medical_examination
-	ON Animals.id_examination = Medical_examination.id
-GROUP BY name_animal
-HAVING weight > 200
+```sql
+SELECT age_staff
+From Staff
+GROUP BY age_staff
+HAVING age_staff < 20
+
+	
 ```
 
 ![](screens/having.png)
@@ -189,44 +133,80 @@ HAVING weight > 200
 
 ## 6.1 В SELECT
 
-Хочу вывести количество привитых животных и имя животных в одном запросе
-Для этого будем использовать вложенный запрос внутри SELECT
+Хочу вывести количество сотрудников младше 20
 
-```
-SELECT 
-	name_animal, 
-        (SELECT COUNT(*) FROM Medical_examination WHERE vaccinations LIKE 'yes') AS количество_привитых_животных
-FROM Animals 
-JOIN Medical_examination
-	ON Animals.id_examination = Medical_examination.id
+```sql
+SELECT ( SELECT COUNT(*) 
+        FROM Staff 
+        WHERE age_staff < 20 ) as количество_сотрудников_младше_20
+        FROM Staff
 ```
 
 ![](screens/attached_request.png)
 
-Вывелась таблица с количеством привитых животных с помощью вложенного запроса
+Вывелась таблица с количеством сотрудников младше 20 с помощью вложенного запроса
 
 ## 6.2 В WHERE
 
-Хочу вывести имя животного с минимальным ростом
-Для этого будем использовать вложенный запрос внутри WHERE
+Хочу вывести сутрудника и их номера телефонов сотрудников оканчивающиеся на 1
 
-```
-SELECT 
-	name_animal,
-    height
-FROM Animals
-JOIN Medical_examination
-	ON Animals.id_examination = Medical_examination.id
-WHERE height LIKE (SELECT MIN(height) FROM Medical_examination)
+```sql
+SELECT name_staff, number_staff
+FROM Staff
+WHERE Staff.number_staff	in (
+  SELECT number_staff FROM Staff WHERE number_staff LIKE '%1'
+  );
+
 ```
 
 ![](screens/attached_request2.png)
 
-Вывелась таблица с именем животного, имеющий минимальный рост
+Вывелась таблица с именами сотрудников и номера телефонов оканчивающиеся на 1
 
 
 # 7. Демонстрация работы оконных функций
 
-# 7.1 Агрегатные функции
+## 7.1 Агрегатные функции
 
-Хочу вывести минимальный вес
+Хочу вывести минимальный, средний и максимальный возраст
+```sql
+
+SELECT Min(age_staff) AS МинимальныйВозраст, AVG(age_staff) AS СреднийВозраст, Max(age_staff) as МаксимальныйВозраст
+FROM Staff
+
+```
+Вывелась таблица с минимальным, средним и максимальным возрастом сотрудников
+## 7.2 РАНЖИРУЮЩИЕ ФУНКЦИИ
+Запрос использует ранжирующую функцию для присвоения ранга каждому сотруднику на основе порядка его первой буквы имени. 
+Ранги упорядочены по убыванию. Результат покажет ранг каждого сотрудника вместе с его именем
+
+```sql
+SELECT id, name_staff, RANK() OVER (ORDER BY name_staff DESC) AS name_staff_rank
+FROM Staff;
+```
+## 7.3 ФУНКЦИИ СМЕЩЕНИЯ
+Выводим возраст сотрудника в следующем году.
+Вывелся возраст сотрудника в следующем году.
+
+```sql
+SELECT name_staff, age_staff, LEAD(age_staff) OVER (ORDER BY age_staff) AS СледующийВозрастСотрудника
+FROM Staff
+```
+# 8 JOIN
+## 8.1 INNER JOIN
+# 9 CASE
+
+```sql
+SELECT Staff.name_staff,
+	CASE
+    	WHEN name_staff LIKE 'А%' THEN '1'
+    	WHEN name_staff LIKE 'В%' THEN '2'
+        ELSE name_staff = '0'
+    END AS циферки
+FROM Staff
+
+```
+Вывод имен сотрудников, начинающихся на В - 2, имена сотрудников на А - 1, остальные 0
+
+# 10 WITH
+
