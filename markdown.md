@@ -126,35 +126,37 @@ WHERE e.employeeid IN (
 
 ### 7.1 АГРЕГАТНЫЕ ФУНКЦИИ
 
-![Агрегатные функции](1.png)
+![Uploading image.png…]()
+
 
 ```sql
 
-SELECT Min(price) AS МинимальнаяЦена, Max(price) AS МаксимальнаяЦена, AVG(price) AS СредняяЦена
-FROM Services
+SELECT Min(ticket_price) AS МинимальнаяЦена, Max(ticket_price) AS МаксимальнаяЦена, AVG(ticket_price) AS СредняяЦена
+FROM flights
 
 ```
-**Вывод минимальной, максимальной, средней цены за услугу стрижки**
+**Вывод минимальной, максимальной, средней цены за билет**
 
 ### 7.2 РАНЖИРУЮЩИЕ ФУНКЦИИ
 ![RANK](rank.png)
 
 ```sql
-SELECT paymentid, paymentamount, RANK() OVER (ORDER BY paymentamount DESC) AS payment_rank
-FROM payments;
+SELECT flight_id, flight_number, RANK() OVER (ORDER BY flight_number) aS flight_rank
+FROM flights
+
 ```
 
-**Запрос использует ранжирующую функцию для присвоения ранга каждому платежу на основе суммы платежа. Ранги упорядочены по убыванию сумм платежей. Результат покажет ранг каждого платежа вместе с суммой платежа**
+**Запрос использует ранжирующую функцию для присвоения ранга каждому платежу на основе номера рейса . Ранги упорядочены по убыванию номера рейса. Результат покажет ранг каждого номера рейса вместе с номером рейса**
 
 
 ### 7.3 ФУНКЦИИ СМЕЩЕНИЯ
 ![LEAD](Lead.png)
 
 ```sql
-SELECT paymentid, paymentamount, LEAD(paymentamount) OVER (ORDER BY paymentdatetime) AS next_paymentamount
-FROM payments;
+SELECT flight_id, ticket_price, LEAD(ticket_price) OVER (ORDER BY flight_id) AS next_flight
+FROM flights;
 ```
-**Используется для получения значения из следующей строки в порядке сортировки. Этот запрос выводит айди платежа, сумму платежа и сумму следующего платежа**
+**Используется для получения значения из следующей строки в порядке сортировки. Этот запрос выводит айди платежа, стоимость билета и следующую стоимость билета**
 
 ## 8 JOIN
 
