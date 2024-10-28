@@ -246,5 +246,5 @@ JOIN HighPayments p ON a.appointmentid = p.appointmentid;
 
 
 ```
-SELECT HYESOS MAX 
+SELECT MAX 
 ```
